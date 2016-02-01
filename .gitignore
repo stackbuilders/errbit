@@ -13,5 +13,4 @@ tmp/*
 bundle
 coverage
 *#
-.ruby-version
 NOTES
