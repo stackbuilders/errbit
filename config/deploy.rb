@@ -8,21 +8,20 @@
 
 # config valid only for current version of Capistrano
 lock '3.4.0'
-#SSHKit.config.command_map[:rake] = "#{fetch(:default_env)[:rvm_bin_path]}/rvm ruby-#{fetch(:rvm_ruby_version)} do bundle exec rake"
+
 set :application, 'errbit'
-set :repo_url, 'https://github.com/stackbuilders/errbit.git'
+set :repo_url, 'https://github.com/errbit/errbit.git'
 set :branch, ENV['branch'] || 'master'
-set :deploy_to, '/var/projects/errbit'
+set :deploy_to, '/var/www/apps/errbit'
 set :keep_releases, 5
+
 set :pty, true
 set :ssh_options, forward_agent: true
-set :default_env, { rvm_bin_path: '~/.rvm/bin' }
-set :rvm_type, :haystak
-set :rvm_ruby_version, '2.2.2'
+
 set :linked_files, fetch(:linked_files, []) + %w(
   .env
   config/newrelic.yml
-  puma.rb
+  config/puma.rb
 )
 
 set :linked_dirs, fetch(:linked_dirs, []) + %w(
@@ -34,7 +33,7 @@ set :linked_dirs, fetch(:linked_dirs, []) + %w(
 # check out capistrano-rbenv documentation
 # set :rbenv_type, :system
 # set :rbenv_path, '/usr/local/rbenv'
-# set :rbenv_ruby, File.read(File.expand_path('../../.ruby-version', __FILE__)).strip
+set :rbenv_ruby, File.read(File.expand_path('../../.ruby-version', __FILE__)).strip
 # set :rbenv_roles, :all
 
 namespace :errbit do
@@ -44,15 +43,6 @@ namespace :errbit do
       execute "mkdir -p #{shared_path}/config"
       execute "mkdir -p #{shared_path}/tmp/pids"
       execute "touch #{shared_path}/.env"
-
-      {
-        'config/newrelic.example.yml' => 'config/newrelic.yml'
-      }.each do |src, target|
-        unless test("[ -f #{shared_path}/#{target} ]")
-          upload! src, "#{shared_path}/#{target}"
-        end
-      end
-
       invoke 'puma:config'
     end
   end
