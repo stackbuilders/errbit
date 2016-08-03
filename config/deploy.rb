@@ -8,11 +8,10 @@
 
 # config valid only for current version of Capistrano
 lock '3.4.0'
-
 set :application, 'errbit'
-set :repo_url, 'https://github.com/errbit/errbit.git'
+set :repo_url, 'https://github.com/stackbuilders/errbit.git'
 set :branch, ENV['branch'] || 'master'
-set :deploy_to, '/var/www/apps/errbit'
+set :deploy_to, '/var/projects/errbit'
 set :keep_releases, 5
 
 set :pty, true
